@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamo.dao.OrderMapper">
+	<resultMap type="com.teamo.bean.Order" id="order">
+		<id column="o_id" property="oid" />
+		<result column="o_time" property="otime" />
+		<result column="o_dawk" property="odawk" />
+		<result column="o_phone" property="ophone" />
+		<association column="u_id" property="uid" autoMapping="true" resultMap="user"></association>
+		<association column="a_id" property="aid" autoMapping="true" resultMap="address"></association>
+		<collection property="orderGoodses" resultMap="orderGoods" autoMapping="true"></collection>
+	</resultMap>
+
+	<resultMap type="com.teamo.bean.User" id="user">
+		<id column="u_id" property="uid" />
+		<result column="u_name" property="uname" />
+		<result column="u_password" property="uemail" />
+		<result column="u_email" property="uemail" />
+		<collection property="userAddresses" resultMap="userAddress" autoMapping="true"></collection>
+		<collection property="orders" resultMap="order" autoMapping="true"></collection>
+	</resultMap>
+
+	<resultMap type="com.teamo.bean.Address" id="address">
+		<id column="a_id" property="aid" />
+		<result column="a_desc" property="adesc" />
+		<collection property="userAddresses" resultMap="userAddress" autoMapping="true"></collection>
+		<collection property="orders" resultMap="order" autoMapping="true"></collection>
+	</resultMap>
+
+	<resultMap type="com.teamo.bean.UserAddress" id="userAddress">
+		<id column="ua_id" property="uaid" />
+		<association property="uid" resultMap="user" column="u_id" autoMapping="true"></association>
+		<association property="aid" resultMap="address" column="a_id" autoMapping="true"></association>
+	</resultMap>
+
+	<resultMap type="com.teamo.bean.Goods" id="goods">
+		<id column="g_id" property="gid" />
+		<result column="g_name" property="gname" />
+		<result column="g_desc" property="gdesc" />
+		<result column="g_price" property="gprice" />
+		<result column="g_img" property="gimg"/>
+		<result column="g_size" property="gsize" />
+		<result column="g_color" property="gcolor" />
+		<collection property="orderGoodses" resultMap="orderGoods" autoMapping="true"></collection>
+	</resultMap>
+
+	<resultMap type="com.teamo.bean.OrderGoods" id="orderGoods">
+		<id column="og_id" property="ogid" />
+		<result column="og_sum" property="ogsum" />
+		<association property="gid" column="g_id" resultMap="goods" autoMapping="true"></association>
+		<association property="oid" column="o_id" resultMap="order" autoMapping="true"></association>
+	</resultMap>
+</mapper>

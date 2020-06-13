@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 在mybatis中添加数据库配置文件的关联 -->
+	<properties resource="com/teamo/conf/jdbc.properties"></properties>
+
+	<!-- 挂载数据库，mybatis是支持多数据库配置 -->
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<!-- 在Mybatis中关联映射文件 -->
+		<mapper resource="com/teamo/dao/ShoppingCartMapper.xml" />
+		<mapper resource="com/teamo/dao/GoodsMapper.xml" />
+		<mapper resource="com/teamo/dao/UserMapper.xml"/>
+		<mapper resource="com/teamo/dao/BlogMapper.xml"/>
+		<mapper resource="com/teamo/dao/OrderMapper.xml"/>
+	</mappers>
+</configuration>

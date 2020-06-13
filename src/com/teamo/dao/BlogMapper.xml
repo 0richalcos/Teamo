@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamo.dao.BlogMapper">
+	<!-- 博客映射 -->
+	<resultMap type="com.teamo.bean.Blog" id="blog">
+		<id column="b_id" property="bid" />
+		<result column="b_title" property="btitle" />
+		<result column="b_img" property="bimg" />
+		<result column="b_intro" property="bintro" />
+		<result column="b_big_img" property="bbigimg"/>
+		<association property="uid" column="u_id" resultMap="user" autoMapping="true"></association>
+		<collection property="blogLabelRelationshipses" resultMap="blogLabelRelationships" autoMapping="true"></collection>
+		<collection property="blogdesc" resultMap="blogdesc" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 用户映射 -->
+	<resultMap type="com.teamo.bean.User" id="user">
+		<id column="u_id" property="uid" />
+		<result column="u_name" property="uname" />
+		<result column="u_password" property="upassword" />
+		<result column="u_email" property="uemail" />
+	</resultMap>
+
+	<!-- 博客标签映射 -->
+	<resultMap type="com.teamo.bean.BlogLabel" id="bloglabel">
+		<id column="bl_id" property="blid" />
+		<result column="bl_label" property="bllabel" />
+	</resultMap>
+
+	<!-- 博客与博客标签关系映射 -->
+	<resultMap type="com.teamo.bean.BlogLabelRelationships" id="blogLabelRelationships">
+		<id column="bb_id" property="bbid" />
+		<association property="bid" column="b_id" resultMap="blog" autoMapping="true"></association>
+		<association property="blid" column="bl_id" resultMap="bloglabel" autoMapping="true"></association>
+	</resultMap>
+
+	<!-- 评论映射 -->
+	<resultMap type="com.teamo.bean.Comment" id="comment">
+		<id column="c_id" property="cid" />
+		<result column="c_author" property="cauthor"/>
+		<result column="c_desc" property="cdesc" />
+		<result column="c_time" property="ctime" />
+		<association property="bdid" column="bd_id" resultMap="blogdesc" autoMapping="true"></association>
+	</resultMap>
+
+	<!-- 博客详情映射 -->
+	<resultMap type="com.teamo.bean.BlogDesc" id="blogdesc">
+		<id column="bd_id" property="bdid" />
+		<result column="bd_desc_one" property="bdone" />
+		<result column="bd_desc_two" property="bdtwo" />
+		<association property="bid" column="b_id" resultMap="blog" autoMapping="true"></association>
+		<collection property="commentes" resultMap="comment" autoMapping="true"></collection>
+	</resultMap>
+</mapper>

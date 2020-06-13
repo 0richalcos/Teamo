@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamo.dao.ShoppingCartMapper">
+	<!-- 用户映射 -->
+	<resultMap type="com.teamo.bean.User" id="user">
+		<id column="u_id" property="uid" />
+		<result column="u_name" property="uname" />
+		<result column="u_password" property="upassword" />
+		<result column="u_email" property="uemail" />
+		<collection property="shoppingCarts" resultMap="shoppingCart" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 购物车映射 -->
+	<resultMap type="com.teamo.bean.ShoppingCart" id="shoppingCart">
+		<id column="s_id" property="sid" />
+		<association column="u_id" property="uid" resultMap="user" autoMapping="true"></association>
+		<collection property="goodsShoppingCarts" resultMap="goodsShoppingCart" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 商品购物车关系映射 -->
+	<resultMap type="com.teamo.bean.GoodsShoppingCart" id="goodsShoppingCart">
+		<id column="sg_id" property="sgid" />
+		<result column="sg_sum" property="sgsum" />
+		<association property="sid" column="s_id" resultMap="shoppingCart" autoMapping="true"></association>
+		<association property="gid" column="g_id" resultMap="goods" autoMapping="true"></association>
+	</resultMap>
+
+	<!-- 商品映射 -->
+	<resultMap type="com.teamo.bean.Goods" id="goods">
+		<id column="g_id" property="gid" />
+		<result column="g_name" property="gname" />
+		<result column="g_desc" property="gdesc" />
+		<result column="g_price" property="gprice" />
+		<result column="g_size" property="gsize" />
+		<result column="g_img" property="gimg" />
+		<result column="g_color" property="gcolor" />
+	</resultMap>
+
+	<update id="updateSum">
+		UPDATE goods_shopping_relationships sg
+		<set>
+			<if test="!flag">
+				sg.sg_sum=sg.sg_sum-1
+			</if>
+			<if test="flag">
+				sg.sg_sum=sg.sg_sum+1
+			</if>
+			<where>
+				sg.sg_id=#{id}
+			</where>
+		</set>
+	</update>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teamo.dao.GoodsMapper">
+	<resultMap type="com.teamo.bean.Goods" id="goods">
+		<id column="g_id" property="gid" />
+		<result column="g_name" property="gname" />
+		<result column="g_desc" property="gdesc" />
+		<result column="g_price" property="gprice" />
+		<result column="g_size" property="gsize" />
+		<result column="g_color" property="gcolor" />
+		<result column="g_img" property="gimg" />
+		<association property="kid" column="k_id" resultMap="kind" autoMapping="true"></association>
+		<collection property="goodsLabels" resultMap="goodsLabel" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 种类映射 -->
+	<resultMap type="com.teamo.bean.Kind" id="kind">
+		<id column="k_id" property="kid" />
+		<result column="k_name" property="kname" />
+		<collection property="goodses" resultMap="goods" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 标签映射 -->
+	<resultMap type="com.teamo.bean.Label" id="label">
+		<id column="l_id" property="lid" />
+		<result column="l_name" property="lname" />
+		<collection property="goodsLabels" resultMap="goodsLabel" autoMapping="true"></collection>
+	</resultMap>
+
+	<!-- 商品标签关系映射 -->
+	<resultMap type="com.teamo.bean.GoodsLabel" id="goodsLabel">
+		<id column="gl_id" property="glid" />
+		<association property="gid" column="g_id" resultMap="goods" autoMapping="true"></association>
+		<association property="lid" column="l_id" resultMap="label" autoMapping="true"></association>
+	</resultMap>
+
+	<sql id="relation">
+		g.k_id=k.k_id and g.g_id=gl.g_id and gl.l_id = l.l_id
+	</sql>
+
+	<!-- 动态sql -->
+	<select id="getInfo" parameterType="java.util.Map" resultMap="goods">
+		select * from Goods g,kind k,Label l,goods_label_relationships gl
+		<where>
+			<include refid="relation"></include>
+			<if test="hangingPlants!=null">
+				and k.k_name = #{hangingPlants}
+			</if>
+			<if test="succulent!=null">
+				and k.k_name = #{succulent}
+			</if>
+			<if test="fern!=null">
+				and k.k_name = #{fern}
+			</if>
+			<if test="palmPlants!=null">
+				and k.k_name = #{palmPlants}
+			</if>
+			<if test="foliagePlant">
+				and k.k_name = #{foliagePlant}
+			</if>
+			<if test="flowerpot!=null">
+				and k.k_name = #{flowerpot}
+			</if>
+			<if test="Resistant!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{Resistant})
+			</if>
+			<if test="coldresistant!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{coldresistant})
+			</if>
+			<if test="suspensibility!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{suspensibility})
+			</if>
+			<if test="Desktopdecoration!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{Desktopdecoration})
+			</if>
+			<if test="indoor!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{indoor})
+			</if>
+			<if test="Easytodo!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{Easytodo})
+			</if>
+			<if test="simple!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{simple})
+			</if>
+			<if test="gorgeous!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{gorgeous})
+			</if>
+			<if test="needle!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{needle})
+			</if>
+			<if test="large!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{large})
+			</if>
+			<if test="flowerpot2!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{flowerpot2})
+			</if>
+			<if test="outdoor!=null">
+				AND gl.g_id IN(SELECT gl.g_id FROM goods_label_relationships gl,label l WHERE gl.l_id=l.l_id AND l.l_name=#{outdoor})
+			</if>
+			<if test="XS!=null">
+				and g.g_size = #{XS}
+			</if>
+			<if test="XL!=null">
+				and g.g_size = #{XL}
+			</if>
+			<if test="XXL!=null">
+				and g.g_size = #{XXL}
+			</if>
+			<if test="S!=null">
+				and g.g_size = #{S}
+			</if>
+			<if test="M!=null">
+				and g.g_size = #{M}
+			</if>
+			<if test="L!=null">
+				and g.g_size = #{L}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="search" parameterType="string" resultMap="goods">
+		SELECT g.* FROM goods g, goods_label_relationships gl, label l, kind k WHERE (g.g_id=gl.g_id AND gl.l_id=l.l_id AND g.k_id=k.k_id) AND (k.k_name LIKE #{str} OR l.l_name LIKE #{str} OR
+		g.g_name LIKE #{str})
+	</select>
+</mapper>
