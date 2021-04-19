@@ -1,3 +1,5 @@
 # Teamo
 
-Bootstrap4 + Vue + SpringBoot + SpringMVC + SpringDataJPA + SpringSecurity
+Bootstrap4 + Vue + SpringBoot + SpringMVC + Mybatis
+
+TemplateEngine:JSP
